@@ -11,75 +11,6 @@ import '../Upload/lib.dart';
 import 'package:repository/Auth/login.dart';
 import 'package:repository/Upload/scieTech.dart';
 
-class BottomNavigationBar1 extends StatelessWidget {
-  const BottomNavigationBar1({Key? key}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [(new Color(0x0458AB)), (new Color(0xE34D3E))],
-        ),
-      ),
-      child: BottomAppBar(
-        elevation: 0,
-        color: Colors.transparent,
-        child: SizedBox(
-          height: 56,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 25.0, right: 25),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconBottomBar(
-                    text: "Home",
-                    icon: Icons.home,
-                    selected: true,
-                    onPressed: () {})
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class IconBottomBar extends StatelessWidget {
-  final String text;
-  final IconData icon;
-  final bool selected;
-  final Function() onPressed;
-
-  const IconBottomBar(
-      {required this.text,
-      required this.icon,
-      required this.selected,
-      required this.onPressed,
-      Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext content) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        IconButton(
-          onPressed: onPressed,
-          icon: Icon(icon,
-              size: 22, color: selected ? Colors.white : Color(0xE34D3E)),
-        ),
-        Text(text,
-            style: TextStyle(
-                fontSize: 12,
-                height: 0.1,
-                color: selected ? Colors.white : Color(0xE34D3E)))
-      ],
-    );
-  }
-}
-
 class repoHome extends StatefulWidget {
   const repoHome({Key? key}) : super(key: key);
 
@@ -358,7 +289,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizaPdf())));
+                              builder: ((context) => LangizakoPdf())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -454,7 +385,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LoginPage())));
+                              builder: ((context) => LangizakodPdf())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -538,23 +469,41 @@ class _repoHomeBig extends State<repoHome> {
               label: ("home"),
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.folder,
-                color: Colors.white,
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => LangizakodPdf())));
+                }),
+                child: Icon(
+                  Icons.folder,
+                  color: Colors.white,
+                ),
               ),
               label: ("MyRepo"),
               backgroundColor: Colors.blue),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.looks,
-                color: Colors.white,
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => LangizakoPdf())));
+                }),
+                child: Icon(
+                  Icons.looks,
+                  color: Colors.white,
+                ),
               ),
               label: ("Explore"),
               backgroundColor: Colors.white),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => MyHomePage())));
+                }),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
               ),
               label: ("Profile"),
               backgroundColor: Colors.blue),

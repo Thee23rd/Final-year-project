@@ -14,6 +14,8 @@ import 'package:repository/Home/Home.dart';
 import 'package:repository/view/iewe.dart';
 import 'package:repository/view/view.dart';
 
+import '../view/viewed.dart';
+
 class UploadPDFz extends StatefulWidget {
   const UploadPDFz({Key? key}) : super(key: key);
 
@@ -76,7 +78,7 @@ class _UploadPDFState extends State<UploadPDFz> {
       });
 
       Navigator.of(this.context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LangizaPdf()),
+        MaterialPageRoute(builder: (context) => LangizakodPdf()),
       );
     } else {
       print('No PDF File Selected');

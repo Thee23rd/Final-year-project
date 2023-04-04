@@ -8,73 +8,80 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import 'package:http/http.dart' as http;
 
-class LangizaPdf extends StatefulWidget {
+class LangizakodPdf extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => LangizaURLState();
+  _LangizaPdfState createState() => _LangizaPdfState();
 }
 
-class LangizaURLState extends State<LangizaPdf> {
-  firebase_storage.FirebaseStorage storage =
-      firebase_storage.FirebaseStorage.instance;
+class _LangizaPdfState extends State<LangizakodPdf> {
+  List<firebase_storage.Reference> _files = [];
 
-  Future<void> listExample() async {
-    firebase_storage.ListResult result = await firebase_storage
+  @override
+  void initState() {
+    super.initState();
+    _listFiles();
+  }
+
+  Future<void> _listFiles() async {
+    final firebase_storage.ListResult result = await firebase_storage
         .FirebaseStorage.instance
         .ref()
         .child('pdfs')
         .listAll();
 
-    result.items.forEach((firebase_storage.Reference ref) {
-      print('Found file: $ref');
+    setState(() {
+      _files = result.items;
     });
-
-    result.prefixes.forEach((firebase_storage.Reference ref) {
-      print('Found directory: $ref');
-    });
-  }
-
-  Future<void> downloadURLExample() async {
-    String downloadURL = await firebase_storage.FirebaseStorage.instance
-        .ref('pdfs/Today.pdf')
-        .getDownloadURL();
-    print(downloadURL);
-    PDFDocument doc = await PDFDocument.fromURL(downloadURL);
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) =>
-                ViewPDFwe(doc))); //Notice the Push Route once this is done.
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    listExample();
-    downloadURLExample();
-    print("All done!");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(title: Text('Files')),
+      body: _files.isEmpty
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: _files.length,
+              itemBuilder: (BuildContext context, int index) {
+                final file = _files[index];
+                return ListTile(
+                  title: Text(file.name),
+                  onTap: () => _openPDF(context, file),
+                );
+              },
+            ),
     );
   }
-}
 
-class ViewPDFwe extends StatefulWidget {
-  PDFDocument document;
-  ViewPDFwe(this.document);
-  @override
-  _ViewPDFState createState() => _ViewPDFState();
-}
+  Future<void> _openPDF(
+      BuildContext context, firebase_storage.Reference file) async {
+    final String downloadURL = await file.getDownloadURL();
+    if (await canLaunch(downloadURL)) {
+      await launch(downloadURL);
+    } else {
+      throw 'Could not launch $downloadURL';
+    }
+  }
 
-class _ViewPDFState extends State<ViewPDFwe> {
+/*class PdfScreen extends StatelessWidget {
+  final PDFDocument document;
+
+  const PdfScreen({super.key, required this.document});
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: PDFViewer(document: widget.document));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("PDF Document"),
+      ),
+      body: Center(
+        child: PDFViewer(document: document),
+      ),
+    );
   }
+}*/
 }
