@@ -12,8 +12,6 @@ import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:repository/Home/Home.dart';
 import 'package:repository/view/iewe.dart';
-import 'package:repository/view/view.dart';
-
 import '../view/viewed.dart';
 
 class UploadPDFz extends StatefulWidget {
@@ -29,8 +27,9 @@ class _UploadPDFState extends State<UploadPDFz> {
   final _authorController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  String? selectedFolder;
 
-  Future uploadPDF() async {
+  Future uploadPDF(String selectedSchool) async {
     final _firebaseStorage = FirebaseStorage.instance;
     final _picker = ImagePicker();
     FilePickerResult? result = await FilePicker.platform
@@ -47,6 +46,7 @@ class _UploadPDFState extends State<UploadPDFz> {
           'author': _authorController.text,
           'title': _titleController.text,
           'description': _descriptionController.text,
+          'School': selectedSchool,
         },
       );
 
@@ -59,7 +59,7 @@ class _UploadPDFState extends State<UploadPDFz> {
       // Upload the PDF file to Firebase Storage
       final uploadTask = _firebaseStorage
           .ref()
-          .child('pdfs/${basename(file.path)}')
+          .child('pdfs/$selectedFolder/${basename(file.path)}')
           .putFile(file, metadata);
 
       // Get the download URL of the uploaded PDF file
@@ -85,6 +85,7 @@ class _UploadPDFState extends State<UploadPDFz> {
     }
   }
 
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,6 +144,35 @@ class _UploadPDFState extends State<UploadPDFz> {
                   decoration: InputDecoration(labelText: 'Description'),
                   validator: FormBuilderValidators.required(),
                 ),
+                FormBuilderDropdown(
+                  name: 'school',
+                  decoration: InputDecoration(
+                    labelText: 'School',
+                  ),
+                  validator: FormBuilderValidators
+                      .required(), // Validate school option
+                  items: <String>[
+                    'School of Agriculture',
+                    'School of Business Studies',
+                    'School of Education',
+                    'School of Engineering and Technology',
+                    'School of Natural and Applied Science',
+                    'School of Social Science',
+                    'School of Medicine and Health Science',
+                    'Directorate of Research and Post Graduate Studies',
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedFolder = value; // Update selectedFolder value
+                    });
+                    uploadPDF(value!);
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
@@ -154,7 +184,7 @@ class _UploadPDFState extends State<UploadPDFz> {
                         var status = await Permission.storage.request();
                         if (status.isGranted) {
                           // Upload PDF file to Firebase Storage
-                          await uploadPDF();
+                          await uploadPDF(String as String);
                         } else {
                           print('Storage Permission Denied');
                         }
@@ -169,6 +199,70 @@ class _UploadPDFState extends State<UploadPDFz> {
             ),
           ),
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.blueGrey,
+        items: [
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => repoHome())));
+                }),
+                child: Icon(
+                  Icons.home,
+                  color: Colors.white,
+                ),
+              ),
+              label: ("home"),
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => LangizakodPdf())));
+                }),
+                child: Icon(
+                  Icons.folder,
+                  color: Colors.white,
+                ),
+              ),
+              label: ("MyRepo"),
+              backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => LangizakoPdf())));
+                }),
+                child: Icon(
+                  Icons.looks,
+                  color: Colors.white,
+                ),
+              ),
+              label: ("Explore"),
+              backgroundColor: Colors.white),
+          BottomNavigationBarItem(
+              icon: GestureDetector(
+                onTap: (() {
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
+                }),
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
+              ),
+              label: ("Profile"),
+              backgroundColor: Colors.blue),
+        ],
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
       ),
     );
   }

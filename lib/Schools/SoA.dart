@@ -14,13 +14,14 @@ import 'package:http/http.dart' as http;
 import 'package:repository/Home/Home.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/iewe.dart';
+import 'package:repository/view/viewed.dart';
 
-class LangizakoPdf extends StatefulWidget {
+class LangizakoPdfSoA extends StatefulWidget {
   @override
   _LangizaPdfState createState() => _LangizaPdfState();
 }
 
-class _LangizaPdfState extends State<LangizakoPdf> {
+class _LangizaPdfState extends State<LangizakoPdfSoA> {
   List<firebase_storage.Reference> _files = [];
 
   @override
@@ -30,25 +31,18 @@ class _LangizaPdfState extends State<LangizakoPdf> {
   }
 
   Future<void> _listFiles() async {
-    final List<firebase_storage.Reference> folders = [];
-    final List<firebase_storage.Reference> files = [];
-    await _listAllFiles(firebase_storage.FirebaseStorage.instance.ref(), files);
+    final firebase_storage.ListResult result =
+        await firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child('pdfs/School of Agriculture') // Specify the folder path here
+            .listAll();
+
     setState(() {
-      _files = files;
+      _files = result.items;
     });
   }
 
-  Future<void> _listAllFiles(firebase_storage.Reference ref,
-      List<firebase_storage.Reference> files) async {
-    final firebase_storage.ListResult result = await ref.listAll();
-    files.addAll(result.items);
-    await Future.forEach(result.prefixes,
-        (firebase_storage.Reference prefixRef) async {
-      await _listAllFiles(prefixRef, files);
-    });
-  }
-
-  int _currentIndex = 2;
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

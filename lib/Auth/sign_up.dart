@@ -16,6 +16,7 @@ class SignUp {
       required this.password,
       required this.programme,
       required this.studentNumber});
+      
 
   Future Register() async {
     await FirebaseAuth.instance

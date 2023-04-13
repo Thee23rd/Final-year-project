@@ -2,14 +2,18 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:repository/Schools/DRPGS.dart';
+import 'package:repository/Schools/SNAR.dart';
+import 'package:repository/Schools/SOE.dart';
+import 'package:repository/Schools/SOMHS.dart';
+import 'package:repository/Schools/SS.dart';
+import 'package:repository/Schools/SoA.dart';
+import 'package:repository/Schools/SoBS.dart';
+import 'package:repository/Schools/set.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/iewe.dart';
 import 'package:repository/view/viewed.dart';
-import 'package:repository/view/viewer.dart';
-import 'package:repository/view_download/try.dart';
-import '../Upload/lib.dart';
 import 'package:repository/Auth/login.dart';
-import 'package:repository/Upload/scieTech.dart';
 
 class repoHome extends StatefulWidget {
   const repoHome({Key? key}) : super(key: key);
@@ -172,9 +176,17 @@ class _repoHomeBig extends State<repoHome> {
                     'Show  By School',
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(
-                    'Veiw all',
-                    style: TextStyle(color: Colors.blue),
+                  GestureDetector(
+                    child: Text(
+                      'Veiw all',
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => LangizakoPdf())))
+                    },
                   ),
                 ],
               ),
@@ -193,7 +205,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => MyHomePage())));
+                              builder: ((context) => LangizakoPdfSet())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -225,7 +237,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => UploadPDFz())));
+                              builder: ((context) => LangizakoPdfSoA())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -257,7 +269,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LoginPage())));
+                              builder: ((context) => LangizakoPdfSS())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -289,7 +301,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdf())));
+                              builder: ((context) => LangizakoPdfBS())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -321,7 +333,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizadPdf())));
+                              builder: ((context) => LangizakoPdfSOE())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -353,7 +365,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdf())));
+                              builder: ((context) => LangizakoPdfSOMHS())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -385,7 +397,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakodPdf())));
+                              builder: ((context) => LangizakoPdfSNAR())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -417,7 +429,7 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LoginPage())));
+                              builder: ((context) => LangizakoPdfDG())));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -459,7 +471,7 @@ class _repoHomeBig extends State<repoHome> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => MyHomePage())));
+                      MaterialPageRoute(builder: ((context) => repoHome())));
                 }),
                 child: Icon(
                   Icons.home,
@@ -498,7 +510,7 @@ class _repoHomeBig extends State<repoHome> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => MyHomePage())));
+                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
                 }),
                 child: Icon(
                   Icons.person,
