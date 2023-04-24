@@ -2,6 +2,7 @@ import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:repository/Auth/login.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:drop_down_list/drop_down_list.dart';
 import 'package:repository/Home/Home.dart';
 import 'package:repository/Auth/sign_up.dart';
@@ -281,7 +282,7 @@ class PaSignUp extends State<SignUpPage> {
                       offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
                 ]),
             alignment: Alignment.center,
-            child: TextField(
+            child: TextFormField(
               controller: emailController,
               cursorColor: Colors.redAccent,
               decoration: InputDecoration(
@@ -294,6 +295,15 @@ class PaSignUp extends State<SignUpPage> {
                 enabledBorder: InputBorder.none,
                 focusedBorder: InputBorder.none,
               ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your email';
+                }
+                if (!EmailValidator.validate(value)) {
+                  return 'Please enter a valid email';
+                }
+                return null;
+              },
             ),
           ),
           Container(
@@ -369,6 +379,28 @@ class PaSignUp extends State<SignUpPage> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(),
             onPressed: () {
+              String password = passwordController.text.trim();
+              if (password.length < 8) {
+                // Show an error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Password is too short.'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
+              if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+                  .hasMatch(password)) {
+                // Show an error message
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Password is too weak.'),
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+                return;
+              }
               SignUp signup = SignUp(
                   email: emailController.text.trim(),
                   firstname: FirstNameController.text.trim(),
@@ -377,6 +409,14 @@ class PaSignUp extends State<SignUpPage> {
                   programme: programController.text.trim(),
                   studentNumber: StudentNumController.text.trim());
               signup.Register();
+
+              // Display a message to the user after signup is successful
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('New user created.'),
+                  duration: Duration(seconds: 3),
+                ),
+              );
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => LoginPage()));
             },

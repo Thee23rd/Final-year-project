@@ -35,7 +35,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
         .FirebaseStorage.instance
         .ref()
         .child(
-            'pdfs/School of Engineering and Science') // Specify the folder path here
+            'pdfs/School of Engineering and Technology') // Specify the folder path here
         .listAll();
 
     setState(() {

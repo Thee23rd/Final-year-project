@@ -29,37 +29,30 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
-    sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  firebase_core: ^2.7.0
-  firebase_auth: ^4.2.9
+  advance_pdf_viewer: ^2.0.1
+  badges: ^3.1.1
+  carousel_slider: ^4.2.1
   cloud_firestore: ^4.4.3
+  cupertino_icons: ^1.0.2
+  drop_down_list: ^0.0.4
   dropdown_search: ^5.0.6
   dropdownfield: ^1.0.3
+  email_validator: ^2.1.17
+  firebase_auth: ^4.2.9
+  firebase_core: ^2.7.0
   firebase_storage: ^11.0.14
+  flutter:
+    sdk: flutter
   flutter_form_builder: ^7.7.0
-  form_builder_validators: ^8.4.0
-  form_builder_file_picker: ^2.3.0
-  carousel_slider: ^4.2.1
-  drop_down_list: ^0.0.4
-  image_picker: ^0.8.7
   flutter_pdfview: ^1.2.9
-  advance_pdf_viewer: ^2.0.1
-  
- 
+  form_builder_file_picker: ^2.3.0
+  form_builder_validators: ^8.4.0
   http: ^0.13.4
+  image_picker: ^0.8.7
   open_file: ^3.2.1
   url_launcher: ^6.1.10
 
-
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -67,10 +60,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -81,29 +75,27 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-  
-   - assets/images/MU_Logo.jpg
-   - assets/images/cd.jpg
-   - assets/images/fc.png
-   - assets/images/grr.png
-   - assets/images/matero.jpg
-   - assets/images/mon.png
-   - assets/images/nyon.jpg
-   - assets/images/et.png
-   - assets/images/ED.png
-   - assets/images/BS.png
-   - assets/images/agric.png
-   - assets/images/chuwi.png
-   - assets/images/Med.png
-   - assets/images/NS.png
-   - assets/images/ss.png
-   - assets/images/all.png
+
+    - assets/images/MU_Logo.jpg
+    - assets/images/cd.jpg
+    - assets/images/fc.png
+    - assets/images/grr.png
+    - assets/images/matero.jpg
+    - assets/images/mon.png
+    - assets/images/nyon.jpg
+    - assets/images/et.png
+    - assets/images/ED.png
+    - assets/images/BS.png
+    - assets/images/agric.png
+    - assets/images/chuwi.png
+    - assets/images/Med.png
+    - assets/images/NS.png
+    - assets/images/ss.png
+    - assets/images/all.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

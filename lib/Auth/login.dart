@@ -114,44 +114,49 @@ class PalogScreen extends State<LoginPage> {
             ),
           ),
           GestureDetector(
-            onTap: () async {
-              FirebaseAuth.instance
-                  .signInWithEmailAndPassword(
+              onTap: () async {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: emailController.text,
-                      password: passwordController.text)
-                  .then((value) {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => repoHome()));
-              }).onError((error, stackTrace) {
-                print("Error ${error.toString()}");
-              });
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 20, right: 20, top: 70),
-              padding: EdgeInsets.only(left: 20, right: 20),
-              alignment: Alignment.center,
-              height: 55,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [(Colors.blue), Colors.blue],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
+                      password: passwordController.text);
+
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => repoHome()));
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content:
+                          Text('Login Failed. Incorrect email or password.'),
+                      duration: Duration(seconds: 3),
+                    ),
+                  );
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 70),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                alignment: Alignment.center,
+                height: 55,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.blue), Colors.blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(70),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 50,
+                      color: Colors.blueAccent,
+                    )
+                  ],
                 ),
-                borderRadius: BorderRadius.circular(70),
-                boxShadow: [
-                  BoxShadow(
-                    offset: Offset(0, 10),
-                    blurRadius: 50,
-                    color: Colors.blueAccent,
-                  )
-                ],
-              ),
-              child: Text(
-                "LOGIN",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
+                child: Text(
+                  "LOGIN",
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Row(

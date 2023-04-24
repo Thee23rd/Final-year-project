@@ -66,22 +66,4 @@ class _LangizaPdfState extends State<LangizakodPdf> {
       throw 'Could not launch $downloadURL';
     }
   }
-
-/*class PdfScreen extends StatelessWidget {
-  final PDFDocument document;
-
-  const PdfScreen({super.key, required this.document});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("PDF Document"),
-      ),
-      body: Center(
-        child: PDFViewer(document: document),
-      ),
-    );
-  }
-}*/
 }

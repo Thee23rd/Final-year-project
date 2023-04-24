@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:repository/Schools/DRPGS.dart';
 import 'package:repository/Schools/SNAR.dart';
@@ -12,6 +14,8 @@ import 'package:repository/Schools/SoBS.dart';
 import 'package:repository/Schools/set.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/iewe.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:badges/badges.dart';
 import 'package:repository/view/viewed.dart';
 import 'package:repository/Auth/login.dart';
 
@@ -23,6 +27,29 @@ class repoHome extends StatefulWidget {
 }
 
 class _repoHomeBig extends State<repoHome> {
+  int fileCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Future<int> _countFilesInFolder(String folderPath) async {
+    try {
+      // Get a reference to the Firebase Storage folder
+      Reference folderRef = FirebaseStorage.instance.ref().child(folderPath);
+
+      // Use the listAll() method to get a list of all items in the folder
+      ListResult result = await folderRef.listAll();
+
+      // Return the file count based on the number of items in the folder
+      return result.items.length;
+    } catch (error) {
+      print('Error counting files: $error');
+      return 0;
+    }
+  }
+
   int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -207,29 +234,55 @@ class _repoHomeBig extends State<repoHome> {
                           MaterialPageRoute(
                               builder: ((context) => LangizakoPdfSet())));
                     },
-                    child: Card(
-                      color: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 4,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/et.png',
-                            height: 50,
+                    child: Stack(
+                      children: [
+                        Card(
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          SizedBox(
-                            height: 10,
+                          elevation: 4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FutureBuilder(
+                                future: _countFilesInFolder(
+                                    'pdfs/School of Engineering and Technology'),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<int> snapshot) {
+                                  if (snapshot.hasData && snapshot.data != 0) {
+                                    return Positioned(
+                                        right: null,
+                                        top: null,
+                                        child: Transform.translate(
+                                            offset: Offset(10.0, -10.0),
+                                            child: FractionalTranslation(
+                                              translation: Offset(1.9, 0.051),
+                                              child: badges.Badge(
+                                                badgeContent: Text(
+                                                    '${snapshot.data}',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                            )));
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                              Image.asset(
+                                'assets/images/et.png',
+                                height: 35,
+                              ),
+                              Text(
+                                'School of Engineering and Technology',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'School of Engineering and Technology',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   InkWell(
@@ -239,29 +292,58 @@ class _repoHomeBig extends State<repoHome> {
                           MaterialPageRoute(
                               builder: ((context) => LangizakoPdfSoA())));
                     },
-                    child: Card(
-                      color: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 4,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/agric.png',
-                            height: 50,
+                    child: Stack(
+                      children: [
+                        Card(
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          SizedBox(
-                            height: 10,
+                          elevation: 4,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FutureBuilder(
+                                future: _countFilesInFolder(
+                                    'pdfs/School of Agriculture'),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<int> snapshot) {
+                                  if (snapshot.hasData && snapshot.data != 0) {
+                                    return Positioned(
+                                        right: null,
+                                        top: null,
+                                        child: Transform.translate(
+                                            offset: Offset(10.0, -10.0),
+                                            child: FractionalTranslation(
+                                              translation: Offset(1.9, 0.051),
+                                              child: badges.Badge(
+                                                badgeContent: Text(
+                                                    '${snapshot.data}',
+                                                    style: TextStyle(
+                                                        color: Colors.white)),
+                                              ),
+                                            )));
+                                  } else {
+                                    return Container();
+                                  }
+                                },
+                              ),
+                              Image.asset(
+                                'assets/images/agric.png',
+                                height: 41,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                'School of Agriculture',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'School of Agriculture',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   InkWell(
@@ -280,9 +362,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future: _countFilesInFolder(
+                                'pdfs/School of Social Science'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/ss.png',
-                            height: 50,
+                            height: 41,
                           ),
                           SizedBox(
                             height: 10,
@@ -312,9 +419,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future: _countFilesInFolder(
+                                'pdfs/School of Business Studies'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/BS.png',
-                            height: 50,
+                            height: 41,
                           ),
                           SizedBox(
                             height: 10,
@@ -344,9 +476,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future:
+                                _countFilesInFolder('pdfs/School of Education'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/ED.png',
-                            height: 50,
+                            height: 41,
                           ),
                           SizedBox(
                             height: 10,
@@ -376,9 +533,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future: _countFilesInFolder(
+                                'pdfs/School of Medicine and Health Science'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/Med.png',
-                            height: 50,
+                            height: 25,
                           ),
                           SizedBox(
                             height: 10,
@@ -408,9 +590,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future: _countFilesInFolder(
+                                'pdfs/School of Natural and Applied Science'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/NS.png',
-                            height: 50,
+                            height: 25,
                           ),
                           SizedBox(
                             height: 10,
@@ -440,9 +647,34 @@ class _repoHomeBig extends State<repoHome> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          FutureBuilder(
+                            future: _countFilesInFolder(
+                                'pdfs/School of Directorate of Research and Post Graduate Studies'),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<int> snapshot) {
+                              if (snapshot.hasData && snapshot.data != 0) {
+                                return Positioned(
+                                    right: null,
+                                    top: null,
+                                    child: Transform.translate(
+                                        offset: Offset(10.0, -10.0),
+                                        child: FractionalTranslation(
+                                          translation: Offset(1.9, 0.051),
+                                          child: badges.Badge(
+                                            badgeContent: Text(
+                                                '${snapshot.data}',
+                                                style: TextStyle(
+                                                    color: Colors.white)),
+                                          ),
+                                        )));
+                              } else {
+                                return Container();
+                              }
+                            },
+                          ),
                           Image.asset(
                             'assets/images/chuwi.png',
-                            height: 50,
+                            height: 25,
                           ),
                           SizedBox(
                             height: 10,
