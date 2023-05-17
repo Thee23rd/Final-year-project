@@ -29,28 +29,29 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  advance_pdf_viewer: ^2.0.1
+  advance_pdf_viewer2: ^2.0.4
   badges: ^3.1.1
   carousel_slider: ^4.2.1
   cloud_firestore: ^4.4.3
   cupertino_icons: ^1.0.2
   drop_down_list: ^0.0.4
   dropdown_search: ^5.0.6
-  dropdownfield: ^1.0.3
+  dropdownfield2: ^1.0.7
   email_validator: ^2.1.17
   firebase_auth: ^4.2.9
   firebase_core: ^2.7.0
+  firebase_database: ^10.1.2
   firebase_storage: ^11.0.14
   flutter:
     sdk: flutter
-  flutter_form_builder: ^7.7.0
+  form_builder_validators: ^9.0.0
   flutter_pdfview: ^1.2.9
-  form_builder_file_picker: ^2.3.0
-  form_builder_validators: ^8.4.0
+  form_builder_file_picker: ^4.0.0
   http: ^0.13.4
   image_picker: ^0.8.7
   open_file: ^3.2.1
   url_launcher: ^6.1.10
+  permission_handler: ^10.2.0
 
 dev_dependencies:
 

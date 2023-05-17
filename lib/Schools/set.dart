@@ -1,4 +1,5 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:io';
@@ -13,16 +14,32 @@ import 'package:open_file/open_file.dart';
 import 'package:http/http.dart' as http;
 import 'package:repository/Home/Home.dart';
 import 'package:repository/Upload/chatup.dart';
-import 'package:repository/view/iewe.dart';
+
 import 'package:repository/view/viewed.dart';
 
 class LangizakoPdfSet extends StatefulWidget {
+  final String schoolName;
+  final String departmentName;
+
+  LangizakoPdfSet({required this.schoolName, required this.departmentName});
   @override
   _LangizaPdfState createState() => _LangizaPdfState();
 }
 
 class _LangizaPdfState extends State<LangizakoPdfSet> {
   List<firebase_storage.Reference> _files = [];
+  List<firebase_storage.Reference> _filteredFiles = [];
+  bool _isAuthenticated = false;
+
+  @override
+  void initState2() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((user) {
+      setState(() {
+        _isAuthenticated = (user != null);
+      });
+    });
+  }
 
   @override
   void initState() {
@@ -35,16 +52,27 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
         .FirebaseStorage.instance
         .ref()
         .child(
-            'pdfs/School of Engineering and Technology') // Specify the folder path here
+            'pdfs/${widget.schoolName}/${widget.departmentName}') // Specify the folder path here
         .listAll();
 
     setState(() {
       _files = result.items;
+      _filteredFiles = _files;
+    });
+  }
+
+  void _filterFiles(String query) {
+    List<firebase_storage.Reference> filteredFiles = _files.where((file) {
+      final fileName = file.name.toLowerCase();
+      return fileName.contains(query.toLowerCase());
+    }).toList();
+
+    setState(() {
+      _filteredFiles = filteredFiles;
     });
   }
 
   int _currentIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +90,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
               child: Row(children: [
                 Expanded(
                   child: TextField(
+                    onChanged: _filterFiles,
                     decoration: InputDecoration(
                       hintText: 'Search by Topic or Field',
                       border: InputBorder.none,
@@ -76,12 +105,12 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
             ),
           ),
           Expanded(
-              child: _files.isEmpty
-                  ? Center(child: CircularProgressIndicator())
+              child: _filteredFiles.isEmpty
+                  ? Center(child: Text('No files found.'))
                   : ListView.builder(
-                      itemCount: _files.length,
+                      itemCount: _filteredFiles.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final file = _files[index];
+                        final file = _filteredFiles[index];
                         return Container(
                             margin:
                                 EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -165,8 +194,8 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakodPdf())));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: ((context) => repoHome())));
                 }),
                 child: Icon(
                   Icons.folder,
@@ -175,6 +204,20 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
               ),
               label: ("MyRepo"),
               backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+            icon: GestureDetector(
+              onTap: (() {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => UploadPDFz())));
+              }),
+              child: Icon(
+                Icons.cloud_upload,
+                color: Colors.white,
+              ),
+            ),
+            label: ("Upload"),
+            backgroundColor: Colors.blue,
+          ),
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {

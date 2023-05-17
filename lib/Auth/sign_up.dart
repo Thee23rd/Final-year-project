@@ -9,28 +9,40 @@ class SignUp {
   String email;
   String password;
 
-  SignUp(
-      {required this.email,
-      required this.firstname,
-      required this.lastName,
-      required this.password,
-      required this.programme,
-      required this.studentNumber});
-      
+  SignUp({
+    required this.email,
+    required this.firstname,
+    required this.lastName,
+    required this.password,
+    required this.programme,
+    required this.studentNumber,
+  });
 
-  Future Register() async {
-    await FirebaseAuth.instance
+  Future<void> Register() async {
+    final UserCredential userCredential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
 
-    storeData(firstname, lastName, programme, int.parse(studentNumber));
+    await storeData(
+      userCredential.user!.uid,
+      firstname,
+      lastName,
+      programme,
+      int.parse(studentNumber),
+    );
   }
 
-  Future storeData(String firstname, String lastname, String programme,
-      int StudentNumber) async {
-    await FirebaseFirestore.instance.collection('Credentials').add({
+  Future<void> storeData(
+    String userId,
+    String firstname,
+    String lastname,
+    String programme,
+    int studentNumber,
+  ) async {
+    await FirebaseFirestore.instance.collection('Credentials').doc(userId).set({
+      'userId': userId,
       'firstname': firstname,
-      'lastname': lastName,
-      'StudentNumber': int.parse(studentNumber),
+      'lastname': lastname,
+      'StudentNumber': studentNumber,
       'Programme': programme,
     });
   }

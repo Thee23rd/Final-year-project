@@ -1,5 +1,5 @@
 import 'package:drop_down_list/model/selected_list_item.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:repository/Auth/login.dart';
 import 'package:email_validator/email_validator.dart';

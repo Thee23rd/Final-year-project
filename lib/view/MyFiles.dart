@@ -1,28 +1,28 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:open_file/open_file.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:repository/Home/Home.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
-import 'package:repository/view/iewe.dart';
 import 'package:repository/view/viewed.dart';
 
-class LangizakoPdfSoA extends StatefulWidget {
+class LangizakoPdfmy extends StatefulWidget {
   @override
   _LangizaPdfState createState() => _LangizaPdfState();
 }
 
-class _LangizaPdfState extends State<LangizakoPdfSoA> {
+class _LangizaPdfState extends State<LangizakoPdfmy> {
   List<firebase_storage.Reference> _files = [];
+  List<firebase_storage.Reference> filesByCurrentUser = [];
+  List<firebase_storage.Reference> filteredFiles = [];
+  TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -31,22 +31,65 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
   }
 
   Future<void> _listFiles() async {
-    final firebase_storage.ListResult result =
-        await firebase_storage.FirebaseStorage.instance
-            .ref()
-            .child('pdfs/School of Agriculture') // Specify the folder path here
-            .listAll();
+    final user = FirebaseAuth.instance.currentUser;
+    final userId = user?.uid;
+    final List<firebase_storage.Reference> folders = [];
+    final List<firebase_storage.Reference> files = [];
+    await _listAllFiles(
+      firebase_storage.FirebaseStorage.instance.ref(),
+      folders,
+      files,
+    );
+    final filesWithCustomMetadata = await Future.wait(
+      files.map((file) => file.getMetadata()).toList(),
+    );
+
+    filesByCurrentUser = files
+        .where((file) =>
+            filesWithCustomMetadata[files.indexOf(file)]
+                .customMetadata!['user'] ==
+            userId)
+        .toList();
 
     setState(() {
-      _files = result.items;
+      filteredFiles = filesByCurrentUser;
     });
   }
 
-  int _currentIndex = 0;
+  Future<void> _listAllFiles(
+      firebase_storage.Reference ref,
+      List<firebase_storage.Reference> folders,
+      List<firebase_storage.Reference> files) async {
+    final firebase_storage.ListResult result = await ref.listAll();
+    folders.add(ref); // add current folder to the list
+    files.addAll(result.items);
+    await Future.forEach(result.prefixes,
+        (firebase_storage.Reference prefixRef) async {
+      await _listAllFiles(prefixRef, folders, files);
+    });
+  }
+
+  int _currentIndex = 1;
+
+  void _filterFiles(String searchText) {
+    if (searchText.isEmpty) {
+      setState(() {
+        filteredFiles = filesByCurrentUser;
+      });
+    } else {
+      setState(() {
+        filteredFiles = filesByCurrentUser
+            .where((file) =>
+                file.name.toLowerCase().contains(searchText.toLowerCase()))
+            .toList();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Files')),
+      appBar: AppBar(title: Text('My Files')),
       body: Column(
         children: [
           Padding(
@@ -60,6 +103,8 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
               child: Row(children: [
                 Expanded(
                   child: TextField(
+                    controller: searchController,
+                    onChanged: _filterFiles,
                     decoration: InputDecoration(
                       hintText: 'Search by Topic or Field',
                       border: InputBorder.none,
@@ -74,72 +119,71 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
             ),
           ),
           Expanded(
-              child: _files.isEmpty
-                  ? Center(child: CircularProgressIndicator())
-                  : ListView.builder(
-                      itemCount: _files.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final file = _files[index];
-                        return Container(
-                            margin:
-                                EdgeInsets.only(left: 10, right: 10, top: 10),
-                            padding: EdgeInsets.only(left: 10, right: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                boxShadow: [
-                                  BoxShadow(
-                                      offset: Offset(0, 12),
-                                      blurRadius: 70,
-                                      color: Colors.grey)
-                                ]),
-                            child: ListTile(
-                              title: Text(
-                                file.name,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              leading: Icon(Icons.picture_as_pdf),
-                              subtitle: FutureBuilder(
-                                future: file.getMetadata(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<firebase_storage.FullMetadata>
-                                        snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Text('Loading...');
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    final metadata = snapshot.data!;
-                                    final lastModified = metadata.updated!
-                                        .toIso8601String()
-                                        .substring(0, 10);
-                                    final customMetadata =
-                                        metadata.customMetadata;
-                                    final author = customMetadata!['author'];
-                                    final title = customMetadata['title'];
-                                    final Field = customMetadata['Field'];
-                                    final School = customMetadata['School'];
+            child: filteredFiles.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: filteredFiles.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final file = filteredFiles[index];
+                      return Container(
+                        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          boxShadow: [
+                            BoxShadow(
+                              offset: Offset(0, 12),
+                              blurRadius: 70,
+                              color: Colors.grey,
+                            )
+                          ],
+                        ),
+                        child: ListTile(
+                          title: Text(
+                            file.name,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          leading: Icon(Icons.picture_as_pdf),
+                          subtitle: FutureBuilder(
+                            future: file.getMetadata(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<firebase_storage.FullMetadata>
+                                    snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Text('Loading...');
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                final metadata = snapshot.data!;
+                                final lastModified = metadata.updated!
+                                    .toIso8601String()
+                                    .substring(0, 10);
+                                final customMetadata = metadata.customMetadata;
+                                final author = customMetadata!['author'];
+                                final title = customMetadata['title'];
+                                final School = customMetadata['School'];
 
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 4),
-                                        Text('Author: $author'),
-                                        Text('Title: $title'),
-                                        SizedBox(height: 4),
-                                        Text('Field: $Field'),
-                                        Text('Upload Date: $lastModified'),
-                                        Text('School: $School'),
-                                      ],
-                                    );
-                                  }
-                                },
-                              ),
-                              onTap: () => _openPDF(context, file),
-                            ));
-                      },
-                    )),
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: 4),
+                                    Text('Author: $author'),
+                                    Text('Title: $title'),
+                                    SizedBox(height: 4),
+                                    Text('Upload Date: $lastModified'),
+                                    Text('School: $School'),
+                                  ],
+                                );
+                              }
+                            },
+                          ),
+                          onTap: () => _openPDF(context, file),
+                        ),
+                      );
+                    },
+                  ),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -164,7 +208,7 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakodPdf())));
+                      builder: ((context) => LangizakoPdfmy())));
                 }),
                 child: Icon(
                   Icons.folder,
@@ -173,6 +217,20 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
               ),
               label: ("MyRepo"),
               backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+            icon: GestureDetector(
+              onTap: (() {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => UploadPDFz())));
+              }),
+              child: Icon(
+                Icons.cloud_upload,
+                color: Colors.white,
+              ),
+            ),
+            label: ("Upload"),
+            backgroundColor: Colors.blue,
+          ),
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
@@ -189,8 +247,8 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => PersonalPage())));
                 }),
                 child: Icon(
                   Icons.person,
@@ -237,7 +295,6 @@ class _LangizaPdfState extends State<LangizakoPdfSoA> {
               SizedBox(height: 4),
               Text('Description: $description'),
               SizedBox(height: 4),
-              Text('Title: $title'),
               Text('Last modified: $lastModified'),
             ],
           ),

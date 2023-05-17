@@ -4,20 +4,15 @@ import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:repository/Schools/DRPGS.dart';
-import 'package:repository/Schools/SNAR.dart';
-import 'package:repository/Schools/SOE.dart';
-import 'package:repository/Schools/SOMHS.dart';
-import 'package:repository/Schools/SS.dart';
-import 'package:repository/Schools/SoA.dart';
-import 'package:repository/Schools/SoBS.dart';
-import 'package:repository/Schools/set.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
-import 'package:repository/view/iewe.dart';
+import 'package:repository/view/MyFiles.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
 import 'package:repository/view/viewed.dart';
 import 'package:repository/Auth/login.dart';
+
+import '../view/departments.dart';
 
 class repoHome extends StatefulWidget {
   const repoHome({Key? key}) : super(key: key);
@@ -70,7 +65,7 @@ class _repoHomeBig extends State<repoHome> {
           children: [
             Padding(
               padding: EdgeInsets.all(15),
-              child: Container(
+              /* child: Container(
                 padding: EdgeInsets.only(left: 20),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
@@ -90,7 +85,7 @@ class _repoHomeBig extends State<repoHome> {
                     icon: Icon(Icons.search),
                   ),
                 ]),
-              ),
+              ),*/
             ),
             Container(
               height: 200,
@@ -204,15 +199,26 @@ class _repoHomeBig extends State<repoHome> {
                     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   GestureDetector(
-                    child: Text(
-                      'Veiw all',
-                      style: TextStyle(color: Colors.blue),
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'View all',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
                     ),
                     onTap: () => {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => LangizakoPdf())))
+                        context,
+                        MaterialPageRoute(
+                          builder: ((context) => LangizakoPdf()),
+                        ),
+                      ),
                     },
                   ),
                 ],
@@ -232,7 +238,9 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSet())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName:
+                                      'School of Engineering and Technology'))));
                     },
                     child: Stack(
                       children: [
@@ -245,31 +253,6 @@ class _repoHomeBig extends State<repoHome> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              FutureBuilder(
-                                future: _countFilesInFolder(
-                                    'pdfs/School of Engineering and Technology'),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<int> snapshot) {
-                                  if (snapshot.hasData && snapshot.data != 0) {
-                                    return Positioned(
-                                        right: null,
-                                        top: null,
-                                        child: Transform.translate(
-                                            offset: Offset(10.0, -10.0),
-                                            child: FractionalTranslation(
-                                              translation: Offset(1.9, 0.051),
-                                              child: badges.Badge(
-                                                badgeContent: Text(
-                                                    '${snapshot.data}',
-                                                    style: TextStyle(
-                                                        color: Colors.white)),
-                                              ),
-                                            )));
-                                  } else {
-                                    return Container();
-                                  }
-                                },
-                              ),
                               Image.asset(
                                 'assets/images/et.png',
                                 height: 35,
@@ -290,7 +273,8 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSoA())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName: 'School of Agriculture'))));
                     },
                     child: Stack(
                       children: [
@@ -351,7 +335,8 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSS())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName: 'School of Social Science'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -408,7 +393,8 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfBS())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName: 'School of Business Studies'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -465,7 +451,8 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSOE())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName: 'School of Education'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -522,7 +509,9 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSOMHS())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName:
+                                      'School of Medicine and Health Science'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -579,7 +568,9 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfSNAR())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName:
+                                      'School of Natural and Applied Science'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -636,7 +627,9 @@ class _repoHomeBig extends State<repoHome> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: ((context) => LangizakoPdfDG())));
+                              builder: ((context) => DepartmentsPage(
+                                  schoolName:
+                                      'School of Directorate of Research and Post Graduate Studies'))));
                     },
                     child: Card(
                       color: Colors.blue,
@@ -716,7 +709,7 @@ class _repoHomeBig extends State<repoHome> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakodPdf())));
+                      builder: ((context) => LangizakoPdfmy())));
                 }),
                 child: Icon(
                   Icons.folder,
@@ -725,6 +718,20 @@ class _repoHomeBig extends State<repoHome> {
               ),
               label: ("MyRepo"),
               backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+            icon: GestureDetector(
+              onTap: (() {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => UploadPDFz())));
+              }),
+              child: Icon(
+                Icons.cloud_upload,
+                color: Colors.white,
+              ),
+            ),
+            label: ("Upload"),
+            backgroundColor: Colors.blue,
+          ),
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
@@ -741,8 +748,8 @@ class _repoHomeBig extends State<repoHome> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => PersonalPage())));
                 }),
                 child: Icon(
                   Icons.person,

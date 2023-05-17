@@ -1,8 +1,8 @@
-import 'package:advance_pdf_viewer/advance_pdf_viewer.dart';
+import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -12,8 +12,9 @@ import 'package:open_file/open_file.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:repository/Home/Home.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
-import 'package:repository/view/iewe.dart';
+import 'package:repository/view/MyFiles.dart';
 
 class LangizakoPdf extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class LangizakoPdf extends StatefulWidget {
 
 class _LangizaPdfState extends State<LangizakoPdf> {
   List<firebase_storage.Reference> _files = [];
+  List<firebase_storage.Reference> _filteredFiles = [];
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
     await _listAllFiles(firebase_storage.FirebaseStorage.instance.ref(), files);
     setState(() {
       _files = files;
+      _filteredFiles = files; // initialize filtered list
     });
   }
 
@@ -48,7 +51,22 @@ class _LangizaPdfState extends State<LangizakoPdf> {
     });
   }
 
-  int _currentIndex = 2;
+  int _currentIndex = 3;
+
+  void _onSearch(String searchText) {
+    setState(() {
+      if (searchText.isEmpty) {
+        _filteredFiles = _files; // show all files if search text is empty
+      } else {
+        _filteredFiles = _files.where((file) {
+          final fileName = file.name.toLowerCase();
+          final search = searchText.toLowerCase();
+          return fileName.contains(search);
+        }).toList();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,6 +84,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
               child: Row(children: [
                 Expanded(
                   child: TextField(
+                    onChanged: _onSearch, // call onSearch method on text change
                     decoration: InputDecoration(
                       hintText: 'Search by Topic or Field',
                       border: InputBorder.none,
@@ -80,12 +99,12 @@ class _LangizaPdfState extends State<LangizakoPdf> {
             ),
           ),
           Expanded(
-              child: _files.isEmpty
+              child: _filteredFiles.isEmpty
                   ? Center(child: CircularProgressIndicator())
                   : ListView.builder(
-                      itemCount: _files.length,
+                      itemCount: _filteredFiles.length,
                       itemBuilder: (BuildContext context, int index) {
-                        final file = _files[index];
+                        final file = _filteredFiles[index];
                         return Container(
                             margin:
                                 EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -123,8 +142,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
                                         metadata.customMetadata;
                                     final author = customMetadata!['author'];
                                     final title = customMetadata['title'];
-                                    final School = customMetadata['School'];
-
+                                    final school = customMetadata['school'];
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -134,7 +152,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
                                         Text('Title: $title'),
                                         SizedBox(height: 4),
                                         Text('Upload Date: $lastModified'),
-                                        Text('School: $School'),
+                                        Text('School: $school'),
                                       ],
                                     );
                                   }
@@ -168,7 +186,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakodPdf())));
+                      builder: ((context) => LangizakoPdfmy())));
                 }),
                 child: Icon(
                   Icons.folder,
@@ -177,6 +195,20 @@ class _LangizaPdfState extends State<LangizakoPdf> {
               ),
               label: ("MyRepo"),
               backgroundColor: Colors.blue),
+          BottomNavigationBarItem(
+            icon: GestureDetector(
+              onTap: (() {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => UploadPDFz())));
+              }),
+              child: Icon(
+                Icons.cloud_upload,
+                color: Colors.white,
+              ),
+            ),
+            label: ("Upload"),
+            backgroundColor: Colors.blue,
+          ),
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
@@ -193,8 +225,8 @@ class _LangizaPdfState extends State<LangizakoPdf> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => PersonalPage())));
                 }),
                 child: Icon(
                   Icons.person,
@@ -284,24 +316,6 @@ class _LangizaPdfState extends State<LangizakoPdf> {
           ],
         );
       },
-    );
-  }
-}
-
-class PdfScreen extends StatelessWidget {
-  final PDFDocument document;
-
-  const PdfScreen({super.key, required this.document});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("PDF Document"),
-      ),
-      body: Center(
-        child: PDFViewer(document: document),
-      ),
     );
   }
 }
