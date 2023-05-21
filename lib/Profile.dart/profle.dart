@@ -131,10 +131,7 @@ class _PersonalPageState extends State<PersonalPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-    );
-  }
-
-  /*  bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.blueGrey,
@@ -214,5 +211,4 @@ class _PersonalPageState extends State<PersonalPage> {
       ),
     );
   }
-}*/
 }

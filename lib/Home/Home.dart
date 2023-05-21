@@ -4,14 +4,20 @@ import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:repository/Explore/card.dart';
+import 'package:repository/Explore/threads.dart';
 import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/MyFiles.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:badges/badges.dart';
+import 'package:repository/view/viewDep.dart';
+import 'package:repository/view/view_year.dart';
 import 'package:repository/view/viewed.dart';
 import 'package:repository/Auth/login.dart';
 
+import '../Explore/threadlist.dart';
+import '../Explore/threadread.dart';
 import '../view/departments.dart';
 
 class repoHome extends StatefulWidget {
@@ -104,7 +110,7 @@ class _repoHomeBig extends State<repoHome> {
                           height: 10,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/MU_Logo.jpg'),
+                              image: AssetImage('assets/images/7.jpg'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -114,7 +120,7 @@ class _repoHomeBig extends State<repoHome> {
                           height: 120,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/fc.png'),
+                              image: AssetImage('assets/images/2.jpg'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -124,7 +130,7 @@ class _repoHomeBig extends State<repoHome> {
                           height: 120,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/grr.png'),
+                              image: AssetImage('assets/images/4.jpg'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -134,7 +140,7 @@ class _repoHomeBig extends State<repoHome> {
                           height: 120,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/matero.jpg'),
+                              image: AssetImage('assets/images/1.jpg'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -144,7 +150,7 @@ class _repoHomeBig extends State<repoHome> {
                           height: 120,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage('assets/images/nyon.jpg'),
+                              image: AssetImage('assets/images/3.jpg'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.circular(10),
@@ -155,7 +161,7 @@ class _repoHomeBig extends State<repoHome> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image: AssetImage(
-                                'assets/images/et.png',
+                                'assets/images/5.jpg',
                               ),
                               fit: BoxFit.cover,
                             ),
@@ -164,10 +170,10 @@ class _repoHomeBig extends State<repoHome> {
                         )
                       ],
                       options: CarouselOptions(
-                        height: 120.0,
+                        height: 150.0,
                         enlargeCenterPage: true,
                         autoPlay: true,
-                        aspectRatio: 16 / 9,
+                        aspectRatio: 5 / 3,
                         autoPlayCurve: Curves.fastOutSlowIn,
                         enableInfiniteScroll: true,
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
@@ -190,39 +196,100 @@ class _repoHomeBig extends State<repoHome> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+              padding: EdgeInsets.fromLTRB(20, 15, 5, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Show  By School',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        'View all',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    onTap: () => {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: ((context) => LangizakoPdf()),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'View all',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: ((context) => LangizakoPdf()),
+                            ),
+                          ),
+                        },
                       ),
-                    },
+                      SizedBox(
+                          width:
+                              10), // Add spacing between the GestureDetector widgets
+                      GestureDetector(
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'View by Department',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: ((context) => DepartmentsPaged()),
+                            ),
+                          ),
+                        },
+                      ),
+                      SizedBox(
+                          width:
+                              10), // Add spacing between the GestureDetector widgets
+                      GestureDetector(
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            'View by Year',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        onTap: () => {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: ((context) => Langizakoyear()),
+                            ),
+                          ),
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
+            ),
+            Text(
+              'View by School',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Expanded(
                 child: Padding(
@@ -736,7 +803,7 @@ class _repoHomeBig extends State<repoHome> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakoPdf())));
+                      builder: ((context) => ThreadListPage())));
                 }),
                 child: Icon(
                   Icons.looks,

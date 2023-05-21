@@ -148,6 +148,21 @@ class _UploadPDFState extends State<UploadPDFz> {
                 child: Column(
                   children: [
                     const SizedBox(height: 20),
+                    FormBuilderFilePicker(
+                      name: 'pdf',
+                      decoration: InputDecoration(labelText: 'PDF File'),
+                      maxFiles: 1,
+                      type: FileType.any,
+                      selector: Row(
+                        children: <Widget>[
+                          Icon(Icons.file_upload),
+                          Text('Upload'),
+                        ],
+                      ),
+                      onFileLoading: (val) {
+                        print(val);
+                      },
+                    ),
                     FormBuilderTextField(
                       name: 'author',
                       controller: _authorController,

@@ -162,7 +162,7 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
                                 final customMetadata = metadata.customMetadata;
                                 final author = customMetadata!['author'];
                                 final title = customMetadata['title'];
-                                final School = customMetadata['School'];
+                                final school = customMetadata['School'];
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +172,7 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
                                     Text('Title: $title'),
                                     SizedBox(height: 4),
                                     Text('Upload Date: $lastModified'),
-                                    Text('School: $School'),
+                                    Text('School: $school'),
                                   ],
                                 );
                               }
