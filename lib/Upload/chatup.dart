@@ -5,13 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_file_picker/form_builder_file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:repository/Explore/threadlist.dart';
 import 'package:repository/Home/Home.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/view/MyFiles.dart';
 import '../view/viewed.dart';
 
@@ -35,6 +38,8 @@ class _UploadPDFState extends State<UploadPDFz> {
   double _uploadProgress = 0.0;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>(); // add _uploadProgress here
+
+  DateTime? selectedDate; // Track the selected date
 
   Future<void> uploadPDF(String selectedSchool, String selectedDepartment,
       BuildContext context) async {
@@ -62,6 +67,9 @@ class _UploadPDFState extends State<UploadPDFz> {
           'description': _descriptionController.text,
           'School': selectedSchool,
           'Department': selectedDepartment,
+          'date': selectedDate != null
+              ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+              : '',
         },
       );
 
@@ -182,6 +190,20 @@ class _UploadPDFState extends State<UploadPDFz> {
                       controller: _descriptionController,
                       decoration: InputDecoration(labelText: 'Description'),
                       validator: FormBuilderValidators.required(),
+                    ),
+                    FormBuilderDateTimePicker(
+                      name: 'date',
+                      inputType: InputType.date,
+                      format: DateFormat('yyyy-MM-dd'),
+                      decoration: InputDecoration(
+                        labelText: 'Date',
+                      ),
+                      validator: FormBuilderValidators.required(),
+                      onChanged: (DateTime? value) {
+                        setState(() {
+                          selectedDate = value;
+                        });
+                      },
                     ),
                     FormBuilderDropdown(
                       name: 'school',
@@ -311,8 +333,8 @@ class _UploadPDFState extends State<UploadPDFz> {
             BottomNavigationBarItem(
                 icon: GestureDetector(
                   onTap: (() {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: ((context) => repoHome())));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: ((context) => LangizakoPdfmy())));
                   }),
                   child: Icon(
                     Icons.folder,
@@ -339,7 +361,7 @@ class _UploadPDFState extends State<UploadPDFz> {
                 icon: GestureDetector(
                   onTap: (() {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: ((context) => LangizakoPdf())));
+                        builder: ((context) => ThreadListPage())));
                   }),
                   child: Icon(
                     Icons.looks,
@@ -352,7 +374,7 @@ class _UploadPDFState extends State<UploadPDFz> {
                 icon: GestureDetector(
                   onTap: (() {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: ((context) => UploadPDFz())));
+                        builder: ((context) => PersonalPage())));
                   }),
                   child: Icon(
                     Icons.person,
@@ -445,20 +467,20 @@ Iterable<DropdownMenuItem<String>> _getDepartmentItems(String school) sync* {
     case 'School of Directorate of Research and Post Graduate Studies':
       yield* const [
         DropdownMenuItem(
-          value: 'SET',
-          child: Text('SET'),
+          value: 'SET Directorate of Research and Post Graduate Studies',
+          child: Text('SET Directorate of Research and Post Graduate Studies'),
         ),
         DropdownMenuItem(
-          value: 'SS',
-          child: Text('SS'),
+          value: 'SS Directorate of Research and Post Graduate Studies',
+          child: Text('SS Directorate of Research and Post Graduate Studies'),
         ),
         DropdownMenuItem(
-          value: 'SOB',
-          child: Text('SOB'),
+          value: 'SOB Directorate of Research and Post Graduate Studies',
+          child: Text('SOB Directorate of Research and Post Graduate Studies'),
         ),
         DropdownMenuItem(
-          value: 'SOE',
-          child: Text('SOE'),
+          value: 'SOE Directorate of Research and Post Graduate Studies',
+          child: Text('SOE Directorate of Research and Post Graduate Studies'),
         ),
       ];
       break;

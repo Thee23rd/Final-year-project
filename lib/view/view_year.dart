@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:advance_pdf_viewer2/advance_pdf_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -54,11 +53,16 @@ class _LangizaPdfState extends State<Langizakoyear> {
     final Map<int, List<firebase_storage.Reference>> filesByYear = {};
     for (final item in result.items) {
       final metadata = await item.getMetadata();
-      final year = metadata.updated!.year;
-      if (!filesByYear.containsKey(year)) {
-        filesByYear[year] = [];
+      final date = metadata.customMetadata!['date'];
+      if (date != null) {
+        final year = int.tryParse(date.substring(0, 4));
+        if (year != null) {
+          if (!filesByYear.containsKey(year)) {
+            filesByYear[year] = [];
+          }
+          filesByYear[year]!.add(item);
+        }
       }
-      filesByYear[year]!.add(item);
     }
     await Future.forEach(result.prefixes,
         (firebase_storage.Reference prefixRef) async {
@@ -110,6 +114,7 @@ class _LangizaPdfState extends State<Langizakoyear> {
                   final metadata = snapshot.data!;
                   final school =
                       metadata.customMetadata!['School'] ?? 'Unknown School';
+                  final date = metadata.customMetadata!['date'];
                   return ListTile(
                     title: Text(
                       file.name,
@@ -124,7 +129,7 @@ class _LangizaPdfState extends State<Langizakoyear> {
                         Text('Title: ${metadata.customMetadata!['title']}'),
                         SizedBox(height: 4),
                         Text(
-                            'Upload Date: ${metadata.updated!.toIso8601String().substring(0, 10)}'),
+                            'Upload Date: ${metadata.customMetadata!['date']}'),
                         Text('School: $school'),
                         // Text('Year: ${metadata.customMetadata!['year']}'),
                       ],
@@ -150,6 +155,7 @@ class _LangizaPdfState extends State<Langizakoyear> {
     final title = customMetadata['title'];
     final description = customMetadata['description'];
     final school = customMetadata['school'];
+    final date = customMetadata['date'];
 
     final lastModified = metadata.updated!.toIso8601String().substring(0, 10);
 
@@ -169,7 +175,7 @@ class _LangizaPdfState extends State<Langizakoyear> {
               SizedBox(height: 4),
               Text('Description: $description'),
               SizedBox(height: 4),
-              Text('Last modified: $lastModified'),
+              Text('Last modified: $date'),
             ],
           ),
           actions: [

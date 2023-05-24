@@ -156,13 +156,12 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 final metadata = snapshot.data!;
-                                final lastModified = metadata.updated!
-                                    .toIso8601String()
-                                    .substring(0, 10);
+
                                 final customMetadata = metadata.customMetadata;
                                 final author = customMetadata!['author'];
                                 final title = customMetadata['title'];
                                 final school = customMetadata['School'];
+                                final date = customMetadata['date'];
 
                                 return Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +170,7 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
                                     Text('Author: $author'),
                                     Text('Title: $title'),
                                     SizedBox(height: 4),
-                                    Text('Upload Date: $lastModified'),
+                                    Text('Upload Date: $date'),
                                     Text('School: $school'),
                                   ],
                                 );
@@ -276,8 +275,7 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
     final author = customMetadata!['author'];
     final title = customMetadata['title'];
     final description = customMetadata['description'];
-
-    final lastModified = metadata.updated!.toIso8601String().substring(0, 10);
+    final date = customMetadata['date'];
 
     showDialog(
       context: context,
@@ -295,7 +293,7 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
               SizedBox(height: 4),
               Text('Description: $description'),
               SizedBox(height: 4),
-              Text('Last modified: $lastModified'),
+              Text('Last modified: $date'),
             ],
           ),
           actions: [

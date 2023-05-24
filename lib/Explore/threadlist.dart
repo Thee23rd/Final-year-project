@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages, prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:repository/Explore/Mythread.dart';
-import 'package:repository/Explore/collabo.dart';
 import 'package:repository/Explore/threadread.dart';
 import 'package:repository/Explore/threads.dart';
 import 'package:repository/Home/Home.dart';

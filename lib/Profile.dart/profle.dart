@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:repository/Auth/login.dart';
+import 'package:repository/Explore/threadlist.dart';
 import 'package:repository/Home/Home.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/MyFiles.dart';
@@ -178,10 +179,10 @@ class _PersonalPageState extends State<PersonalPage> {
           ),
           BottomNavigationBarItem(
               icon: GestureDetector(
-                onTap: (() {
+                onTap: () => {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakoPdfmy())));
-                }),
+                      builder: ((context) => ThreadListPage())))
+                },
                 child: Icon(
                   Icons.looks,
                   color: Colors.white,

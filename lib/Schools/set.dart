@@ -12,8 +12,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:open_file/open_file.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:repository/Explore/threadlist.dart';
 import 'package:repository/Home/Home.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
+import 'package:repository/view/MyFiles.dart';
 
 import 'package:repository/view/viewed.dart';
 
@@ -141,15 +144,14 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
                                     final metadata = snapshot.data!;
-                                    final lastModified = metadata.updated!
-                                        .toIso8601String()
-                                        .substring(0, 10);
+
                                     final customMetadata =
                                         metadata.customMetadata;
                                     final author = customMetadata!['author'];
                                     final title = customMetadata['title'];
                                     final Field = customMetadata['Field'];
                                     final School = customMetadata['School'];
+                                    final date = customMetadata['date'];
 
                                     return Column(
                                       crossAxisAlignment:
@@ -160,7 +162,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
                                         Text('Title: $title'),
                                         SizedBox(height: 4),
                                         Text('Field: $Field'),
-                                        Text('Upload Date: $lastModified'),
+                                        Text('Upload Date: $date'),
                                         Text('School: $School'),
                                       ],
                                     );
@@ -194,8 +196,8 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => repoHome())));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => LangizakoPdfmy())));
                 }),
                 child: Icon(
                   Icons.folder,
@@ -222,7 +224,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakoPdf())));
+                      builder: ((context) => ThreadListPage())));
                 }),
                 child: Icon(
                   Icons.looks,
@@ -234,8 +236,8 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
           BottomNavigationBarItem(
               icon: GestureDetector(
                 onTap: (() {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: ((context) => UploadPDFz())));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => PersonalPage())));
                 }),
                 child: Icon(
                   Icons.person,
@@ -263,8 +265,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
     final author = customMetadata!['author'];
     final title = customMetadata['title'];
     final description = customMetadata['description'];
-
-    final lastModified = metadata.updated!.toIso8601String().substring(0, 10);
+    final date = customMetadata['date'];
 
     showDialog(
       context: context,
@@ -283,7 +284,7 @@ class _LangizaPdfState extends State<LangizakoPdfSet> {
               Text('Description: $description'),
               SizedBox(height: 4),
               Text('Title: $title'),
-              Text('Last modified: $lastModified'),
+              Text('Last modified: $date'),
             ],
           ),
           actions: [
