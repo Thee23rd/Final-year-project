@@ -21,6 +21,51 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
   List<String> comments = [];
 
   Future<void> _createThread() async {
+    final title = _titleController.text.trim();
+    final content = _contentController.text.trim();
+
+    if (title.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter a title.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
+    if (content.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter the content.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
+
     final timestamp = DateTime.now();
 
     try {
@@ -50,8 +95,8 @@ class _CreateThreadPageState extends State<CreateThreadPage> {
       final userId = currentUser.uid;
 
       await FirebaseFirestore.instance.collection('threads').add({
-        'title': _titleController.text,
-        'content': _contentController.text,
+        'title': title,
+        'content': content,
         'timestamp': timestamp,
         'userId': userId,
       });

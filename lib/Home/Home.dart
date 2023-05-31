@@ -1,25 +1,24 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:ui';
 
 import 'package:badges/badges.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:repository/Explore/card.dart';
 import 'package:repository/Explore/threads.dart';
 import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/MyFiles.dart';
 import 'package:badges/badges.dart' as badges;
-import 'package:badges/badges.dart';
 import 'package:repository/view/viewDep.dart';
 import 'package:repository/view/view_year.dart';
 import 'package:repository/view/viewed.dart';
 import 'package:repository/Auth/login.dart';
-
 import '../Explore/threadlist.dart';
-import '../Explore/threadread.dart';
 import '../view/departments.dart';
 
+// ignore: camel_case_types
 class repoHome extends StatefulWidget {
   const repoHome({Key? key}) : super(key: key);
 
@@ -69,29 +68,9 @@ class _repoHomeBig extends State<repoHome> {
       body: SafeArea(
         child: Column(
           children: [
+            // ignore: prefer_const_constructors
             Padding(
               padding: EdgeInsets.all(15),
-              /* child: Container(
-                padding: EdgeInsets.only(left: 20),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Row(children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search by Topic or Field',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.search),
-                  ),
-                ]),
-              ),*/
             ),
             Container(
               height: 200,
@@ -833,7 +812,5 @@ class _repoHomeBig extends State<repoHome> {
         },
       ),
     );
-
-    // ignore: dead_code
   }
 }

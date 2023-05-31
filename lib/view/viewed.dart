@@ -11,6 +11,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:open_file/open_file.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:repository/Explore/threadlist.dart';
 import 'package:repository/Home/Home.dart';
 import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
@@ -145,6 +146,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
                                     final school = customMetadata['School'];
                                     final department =
                                         customMetadata['Department'];
+                                    final date = customMetadata['date'];
                                     return Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -153,7 +155,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
                                         Text('Author: $author'),
                                         Text('Title: $title'),
                                         SizedBox(height: 4),
-                                        Text('Upload Date: $lastModified'),
+                                        Text('Upload Date: $date'),
                                         Text('Department: $department'),
                                         Text('School: $school'),
                                       ],
@@ -216,7 +218,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
               icon: GestureDetector(
                 onTap: (() {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: ((context) => LangizakoPdf())));
+                      builder: ((context) => ThreadListPage())));
                 }),
                 child: Icon(
                   Icons.looks,
@@ -257,8 +259,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
     final author = customMetadata!['author'];
     final title = customMetadata['title'];
     final description = customMetadata['description'];
-
-    final lastModified = metadata.updated!.toIso8601String().substring(0, 10);
+    final date = customMetadata['date'];
 
     showDialog(
       context: context,
@@ -276,7 +277,7 @@ class _LangizaPdfState extends State<LangizakoPdf> {
               SizedBox(height: 4),
               Text('Description: $description'),
               SizedBox(height: 4),
-              Text('Last modified: $lastModified'),
+              Text('Last modified: $date'),
             ],
           ),
           actions: [

@@ -4,15 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:repository/Auth/login.dart';
 import 'package:repository/Explore/threadlist.dart';
 import 'package:repository/Home/Home.dart';
+import 'package:repository/Profile.dart/profle.dart';
 import 'package:repository/Upload/chatup.dart';
 import 'package:repository/view/MyFiles.dart';
 
-class PersonalPage extends StatefulWidget {
+class ThreadPersona extends StatefulWidget {
   @override
   _PersonalPageState createState() => _PersonalPageState();
 }
 
-class _PersonalPageState extends State<PersonalPage> {
+class _PersonalPageState extends State<ThreadPersona> {
   late User _user;
   String? _firstName;
   String? _lastName;

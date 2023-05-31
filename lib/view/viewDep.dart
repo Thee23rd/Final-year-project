@@ -102,6 +102,7 @@ class _DepartmentsPageState extends State<DepartmentsPaged> {
                     final fileData = _files[index];
                     final file = fileData['file'];
                     final metadata = fileData['metadata'];
+
                     return Container(
                         margin: EdgeInsets.only(left: 10, right: 10, top: 10),
                         padding: EdgeInsets.only(left: 10, right: 10),
@@ -124,9 +125,7 @@ class _DepartmentsPageState extends State<DepartmentsPaged> {
                                       TextStyle(fontWeight: FontWeight.bold)),
                               SizedBox(height: 4),
                               Text('Author: ${metadata['author']}'),
-                              Text('Title: ${metadata['title']}'),
-                              Text('Department: ${metadata['Department']}'),
-                              Text('School: ${metadata['School']}'),
+                              Text('Date: ${metadata['date']}'),
 
                               // Add more custom metadata fields as needed
                             ],
@@ -152,8 +151,7 @@ Future<void> _openPDF(
   final title = customMetadata['title'];
   final description = customMetadata['description'];
   final school = customMetadata['school'];
-
-  final lastModified = metadata.updated!.toIso8601String().substring(0, 10);
+  final date = customMetadata['date'];
 
   showDialog(
     context: context,
@@ -171,7 +169,7 @@ Future<void> _openPDF(
             SizedBox(height: 4),
             Text('Description: $description'),
             SizedBox(height: 4),
-            Text('Last modified: $lastModified'),
+            Text('Last modified: $date'),
           ],
         ),
         actions: [
