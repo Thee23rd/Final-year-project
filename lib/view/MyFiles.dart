@@ -86,6 +86,38 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
     }
   }
 
+  void _deleteFile(firebase_storage.Reference file) async {
+    try {
+      // Get the full path of the file
+      final filePath = file.fullPath;
+
+      // Delete the file from Firebase Cloud Storage
+      await firebase_storage.FirebaseStorage.instance.ref(filePath).delete();
+
+      // Remove the file from the filteredFiles list
+      setState(() {
+        filteredFiles.remove(file);
+      });
+
+      // Show a snackbar or display a message to indicate successful deletion
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('File deleted successfully'),
+        ),
+      );
+    } catch (e) {
+      // Handle any errors that occurred during deletion
+      print('Failed to delete file: $e');
+      // Show a snackbar or display an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete file'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,59 +157,73 @@ class _LangizaPdfState extends State<LangizakoPdfmy> {
                     itemCount: filteredFiles.length,
                     itemBuilder: (BuildContext context, int index) {
                       final file = filteredFiles[index];
-                      return Container(
-                        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                        padding: EdgeInsets.only(left: 10, right: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          boxShadow: [
-                            BoxShadow(
-                              offset: Offset(0, 12),
-                              blurRadius: 70,
-                              color: Colors.grey,
-                            )
-                          ],
+                      return Dismissible(
+                        key: Key(file.name), // Unique key for each item
+                        direction:
+                            DismissDirection.startToEnd, // Swipe direction
+                        background: Container(
+                          color: Colors.red, // Background color when swiping
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: Icon(Icons.delete, color: Colors.white),
                         ),
-                        child: ListTile(
-                          title: Text(
-                            file.name,
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                        onDismissed: (direction) =>
+                            _deleteFile(file), // Delete file callback
+                        child: Container(
+                          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+                          padding: EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            boxShadow: [
+                              BoxShadow(
+                                offset: Offset(0, 12),
+                                blurRadius: 70,
+                                color: Colors.grey,
+                              ),
+                            ],
                           ),
-                          leading: Icon(Icons.picture_as_pdf),
-                          subtitle: FutureBuilder(
-                            future: file.getMetadata(),
-                            builder: (BuildContext context,
-                                AsyncSnapshot<firebase_storage.FullMetadata>
-                                    snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text('Loading...');
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                final metadata = snapshot.data!;
+                          child: ListTile(
+                            title: Text(
+                              file.name,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            leading: Icon(Icons.picture_as_pdf),
+                            subtitle: FutureBuilder(
+                              future: file.getMetadata(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<firebase_storage.FullMetadata>
+                                      snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text('Loading...');
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  final metadata = snapshot.data!;
+                                  final customMetadata =
+                                      metadata.customMetadata;
+                                  final author = customMetadata!['author'];
+                                  final title = customMetadata['title'];
+                                  final school = customMetadata['School'];
+                                  final date = customMetadata['date'];
 
-                                final customMetadata = metadata.customMetadata;
-                                final author = customMetadata!['author'];
-                                final title = customMetadata['title'];
-                                final school = customMetadata['School'];
-                                final date = customMetadata['date'];
-
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(height: 4),
-                                    Text('Author: $author'),
-                                    Text('Title: $title'),
-                                    SizedBox(height: 4),
-                                    Text('Upload Date: $date'),
-                                    Text('School: $school'),
-                                  ],
-                                );
-                              }
-                            },
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 4),
+                                      Text('Author: $author'),
+                                      Text('Title: $title'),
+                                      SizedBox(height: 4),
+                                      Text('Upload Date: $date'),
+                                      Text('School: $school'),
+                                    ],
+                                  );
+                                }
+                              },
+                            ),
+                            onTap: () => _openPDF(context, file),
                           ),
-                          onTap: () => _openPDF(context, file),
                         ),
                       );
                     },

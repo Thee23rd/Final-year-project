@@ -40,7 +40,10 @@ class _CollaborationRequestsPageState extends State<CollaborationRequestsPage> {
   }
 
   Future<void> _showConfirmationDialog(
-      BuildContext context, String? senderEmail) async {
+    BuildContext context,
+    String? senderEmail,
+    int? senderPhone,
+  ) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -50,7 +53,8 @@ class _CollaborationRequestsPageState extends State<CollaborationRequestsPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Do you want to accept this collaboration request?'),
+                Text(
+                    'Do you want to accept this collaboration request? Contact the user '),
               ],
             ),
           ),
@@ -69,6 +73,17 @@ class _CollaborationRequestsPageState extends State<CollaborationRequestsPage> {
                 Navigator.of(context).pop();
                 // Send acceptance email
                 _sendEmail(senderEmail);
+              },
+            ),
+            TextButton(
+              child: Text('Call'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                final Uri _phoneLaunchUri = Uri(
+                  scheme: 'tel',
+                  path: senderPhone.toString(),
+                );
+                launch(_phoneLaunchUri.toString());
               },
             ),
           ],
@@ -136,6 +151,7 @@ class _CollaborationRequestsPageState extends State<CollaborationRequestsPage> {
                   final firstName = userData?['firstname'] as String?;
                   final lastName = userData?['lastname'] as String?;
                   final senderEmail = userData?['email'] as String?;
+                  final phone = userData?['phone'];
 
                   return ListTile(
                     leading: Icon(Icons.message),
@@ -144,10 +160,11 @@ class _CollaborationRequestsPageState extends State<CollaborationRequestsPage> {
                       children: [
                         Text('Message: $message'),
                         Text('Sent by: $firstName $lastName'),
+                        //  Text('contact: $phone'),
                       ],
                     ),
                     onTap: () {
-                      _showConfirmationDialog(context, senderEmail);
+                      _showConfirmationDialog(context, senderEmail, phone);
                     },
                   );
                 },

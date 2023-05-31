@@ -13,6 +13,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class PaSignUp extends State<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
   final FirstNameController = TextEditingController();
   final LastNameController = TextEditingController();
   final StudentNumController = TextEditingController();
@@ -133,325 +134,367 @@ class PaSignUp extends State<SignUpPage> {
 
   Widget Ngena() {
     return Scaffold(
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
+      child: Form(
+          key: _formKey,
           child: Column(
-        children: [
-          Container(
-            height: 250,
-            decoration: BoxDecoration(
-                borderRadius:
-                    BorderRadius.only(bottomLeft: Radius.circular(90)),
-                color: Colors.blue,
-                gradient: LinearGradient(
-                    colors: [(Colors.blue), (Colors.blue)],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter)),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                      margin: EdgeInsets.only(right: 20, top: 20),
-                      child: Image.asset(
-                        'assets/images/MU_Logo.jpg',
-                        height: 90,
-                        width: 90,
-                      )),
-                  Container(
-                    margin: EdgeInsets.only(right: 20, top: 20),
-                    alignment: Alignment.bottomRight,
-                    child: Text("SignUp",
-                        style: TextStyle(fontSize: 20, color: Colors.white)),
-                  )
-                ],
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 50),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: FirstNameController,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.black,
-                ),
-                hintText: "First Name",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: LastNameController,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.person,
-                  color: Colors.black,
-                ),
-                hintText: "Last Name",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: StudentNumController,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.numbers,
-                  color: Colors.black,
-                ),
-                hintText: "Student Number",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: DropdownButton<String>(
-              isExpanded: true,
-              value: dropdownValue,
-              items: programs.map<DropdownMenuItem<String>>((String program) {
-                return DropdownMenuItem<String>(
-                  value: program,
-                  child: Text(program),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropdownValue = newValue!;
-                  programController.text = newValue;
-                });
-              },
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextFormField(
-              controller: emailController,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.email,
-                  color: Colors.black,
-                ),
-                labelText: 'Email',
-                hintText: "TheeDee@gmail.com",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter your email';
-                }
-                if (!EmailValidator.validate(value)) {
-                  return 'Please enter a valid email';
-                }
-                return null;
-              },
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: phoneController,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.phone,
-                  color: Colors.black,
-                ),
-                hintText: "Phone Number",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
-            padding: EdgeInsets.only(left: 20, right: 20),
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.grey[200],
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0, 12), blurRadius: 70, color: Colors.grey)
-                ]),
-            alignment: Alignment.center,
-            child: TextField(
-              controller: passwordController,
-              obscureText: true,
-              cursorColor: Colors.redAccent,
-              decoration: InputDecoration(
-                icon: Icon(
-                  Icons.vpn_key,
-                  color: Colors.black,
-                ),
-                hintText: "password",
-                enabledBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 20, right: 20),
-            alignment: Alignment.centerRight,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [(Colors.blue), Colors.blue],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-              borderRadius: BorderRadius.circular(70),
-              boxShadow: [
-                BoxShadow(
-                  offset: Offset(0, 10),
-                  blurRadius: 50,
-                  color: Colors.blueAccent,
-                )
-              ],
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(),
-            onPressed: () {
-              String password = passwordController.text.trim();
-              if (password.length < 8) {
-                // Show an error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Password is too short.'),
-                    duration: Duration(seconds: 3),
+            children: [
+              Container(
+                height: 250,
+                decoration: BoxDecoration(
+                    borderRadius:
+                        BorderRadius.only(bottomLeft: Radius.circular(90)),
+                    color: Colors.blue,
+                    gradient: LinearGradient(
+                        colors: [(Colors.blue), (Colors.blue)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter)),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                          margin: EdgeInsets.only(right: 20, top: 20),
+                          child: Image.asset(
+                            'assets/images/MU_Logo.jpg',
+                            height: 90,
+                            width: 90,
+                          )),
+                      Container(
+                        margin: EdgeInsets.only(right: 20, top: 20),
+                        alignment: Alignment.bottomRight,
+                        child: Text("SignUp",
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.white)),
+                      )
+                    ],
                   ),
-                );
-                return;
-              }
-              if (!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
-                  .hasMatch(password)) {
-                // Show an error message
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Password is too weak.'),
-                    duration: Duration(seconds: 3),
-                  ),
-                );
-                return;
-              }
-              SignUp signup = SignUp(
-                  email: emailController.text.trim(),
-                  firstname: FirstNameController.text.trim(),
-                  lastName: LastNameController.text.trim(),
-                  password: passwordController.text.trim(),
-                  programme: programController.text.trim(),
-                  studentNumber: StudentNumController.text.trim());
-              signup.Register();
-
-              // Display a message to the user after signup is successful
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('New user created.'),
-                  duration: Duration(seconds: 3),
-                ),
-              );
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
-            },
-            child: Container(
-              height: 50,
-              width: 200,
-              child: Center(
-                child: Text(
-                  "SignUp",
-                  style: TextStyle(color: Colors.white),
                 ),
               ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Already have an account"),
-                GestureDetector(
-                  onTap: () => {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage())),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 50),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: FirstNameController,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                    hintText: "First Name",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your first name';
+                    }
+                    return null;
                   },
-                  child: Text(
-                    "Login Here",
-                    style: TextStyle(color: Colors.blue),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: LastNameController,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                    hintText: "Last Name",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
                   ),
-                )
-              ],
-            ),
-          )
-        ],
-      )),
-    );
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your Last name';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: StudentNumController,
+                  keyboardType: TextInputType.number,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.numbers,
+                      color: Colors.black,
+                    ),
+                    hintText: "Student Number",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your Student Number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  value: dropdownValue,
+                  items:
+                      programs.map<DropdownMenuItem<String>>((String program) {
+                    return DropdownMenuItem<String>(
+                      value: program,
+                      child: Text(program),
+                    );
+                  }).toList(),
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      dropdownValue = newValue!;
+                      programController.text = newValue;
+                    });
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: phoneController,
+                  keyboardType: TextInputType.number,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.phone,
+                      color: Colors.black,
+                    ),
+                    hintText: "Phone Number",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your Phone Number';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: emailController,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.email,
+                      color: Colors.black,
+                    ),
+                    labelText: 'Email',
+                    hintText: "TheeDee@gmail.com",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!EmailValidator.validate(value)) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+                padding: EdgeInsets.only(left: 20, right: 20),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.grey[200],
+                    boxShadow: [
+                      BoxShadow(
+                          offset: Offset(0, 12),
+                          blurRadius: 70,
+                          color: Colors.grey)
+                    ]),
+                alignment: Alignment.center,
+                child: TextFormField(
+                  controller: passwordController,
+                  obscureText: true,
+                  cursorColor: Colors.redAccent,
+                  decoration: InputDecoration(
+                    icon: Icon(
+                      Icons.vpn_key,
+                      color: Colors.black,
+                    ),
+                    hintText: "password",
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                  ),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your Password';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20, right: 20),
+                alignment: Alignment.centerRight,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [(Colors.blue), Colors.blue],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.circular(70),
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 10),
+                      blurRadius: 50,
+                      color: Colors.blueAccent,
+                    )
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(),
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    String firstName = FirstNameController.text;
+                    String lastName = LastNameController.text;
+
+                    String student = StudentNumController.text;
+
+                    String email = emailController.text;
+
+                    String password = passwordController.text;
+
+                    SignUp signup = SignUp(
+                        email: emailController.text.trim(),
+                        firstname: FirstNameController.text.trim(),
+                        lastName: LastNameController.text.trim(),
+                        password: passwordController.text.trim(),
+                        phone: phoneController.text.trim(),
+                        programme: programController.text.trim(),
+                        studentNumber: StudentNumController.text.trim());
+                    signup.Register();
+
+                    // Display a message to the user after signup is successful
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('New user created.'),
+                        duration: Duration(seconds: 3),
+                      ),
+                    );
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()));
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  width: 200,
+                  child: Center(
+                    child: Text(
+                      "SignUp",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Already have an account"),
+                    GestureDetector(
+                      onTap: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage())),
+                      },
+                      child: Text(
+                        "Login Here",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          )),
+    ));
   }
 }

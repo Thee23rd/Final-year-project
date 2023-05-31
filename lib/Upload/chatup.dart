@@ -27,7 +27,7 @@ class UploadPDFz extends StatefulWidget {
 
 class _UploadPDFState extends State<UploadPDFz> {
   String? pdfUrl;
-  final _formKey = GlobalKey<FormBuilderState>();
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
   final _authorController = TextEditingController();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -262,6 +262,9 @@ class _UploadPDFState extends State<UploadPDFz> {
                                     if (_formKey.currentState!.fields['pdf']!
                                             .value !=
                                         null) {
+                                      // Trigger field validation
+                                      _formKey.currentState!.save();
+
                                       // Validate form fields
                                       if (_formKey.currentState!.validate()) {
                                         // Request storage permission
@@ -290,6 +293,7 @@ class _UploadPDFState extends State<UploadPDFz> {
                                               );
                                             },
                                           );
+
                                           // Upload PDF file to Firebase Storage
                                           await uploadPDF(selectedSchool!,
                                               selectedDepartment!, context);

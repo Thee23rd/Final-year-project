@@ -7,6 +7,7 @@ class SignUp {
   String studentNumber;
   String programme;
   String email;
+  String phone;
   String password;
 
   SignUp({
@@ -16,6 +17,7 @@ class SignUp {
     required this.password,
     required this.programme,
     required this.studentNumber,
+    required this.phone,
   });
 
   Future<void> Register() async {
@@ -26,6 +28,7 @@ class SignUp {
       userCredential.user!.uid,
       firstname,
       lastName,
+      int.parse(phone),
       programme,
       int.parse(studentNumber),
     );
@@ -35,6 +38,7 @@ class SignUp {
     String userId,
     String firstname,
     String lastname,
+    int phone,
     String programme,
     int studentNumber,
   ) async {
@@ -42,6 +46,7 @@ class SignUp {
       'userId': userId,
       'firstname': firstname,
       'lastname': lastname,
+      'phone': phone,
       'StudentNumber': studentNumber,
       'Programme': programme,
     });

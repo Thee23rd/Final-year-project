@@ -23,7 +23,7 @@ class _ThreadPageState extends State<ThreadPage> {
 
   Future<void> _addComment() async {
     if (_commentController.text.isNotEmpty) {
-      final comment = _commentController.text;
+      final comment = _commentController.text.trim();
       final user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
@@ -48,6 +48,24 @@ class _ThreadPageState extends State<ThreadPage> {
           _commentController.clear();
         });
       }
+    } else {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Error'),
+            content: Text('Please enter a comment.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -90,7 +108,29 @@ class _ThreadPageState extends State<ThreadPage> {
           actions: [
             TextButton(
               onPressed: () {
-                final message = _messageController.text;
+                final message = _messageController.text.trim();
+
+                if (message.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Error'),
+                        content: Text('Please enter a message.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+
                 // Save the collaboration request or handle it in any way you want
                 _sendCollaborationRequest(message);
                 Navigator.of(context).pop();
@@ -113,20 +153,29 @@ class _ThreadPageState extends State<ThreadPage> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       final userId = user.uid;
-      final collaborationRequestId =
-          widget.threadId; // Use the same ID as the thread ID
 
-      await FirebaseFirestore.instance
+      final collaborationRequestRef = FirebaseFirestore.instance
           .collection('threads')
           .doc(widget.threadId)
           .collection('collaborationRequests')
-          .doc(collaborationRequestId)
-          .set({
-        'message': message,
-        'userId': userId,
-        'threadId': widget.threadId,
-        'timestamp': DateTime.now(),
-      });
+          .doc(); // Generate a unique ID for the collaboration request
+
+      final collaborationRequestSnapshot = await collaborationRequestRef.get();
+      if (collaborationRequestSnapshot.exists) {
+        // Update the existing collaboration request document
+        await collaborationRequestRef.update({
+          'message': message,
+          'timestamp': DateTime.now(),
+        });
+      } else {
+        // Create a new collaboration request document
+        await collaborationRequestRef.set({
+          'message': message,
+          'userId': userId,
+          'threadId': widget.threadId,
+          'timestamp': DateTime.now(),
+        });
+      }
 
       showDialog(
         context: context,
