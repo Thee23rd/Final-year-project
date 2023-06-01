@@ -97,8 +97,16 @@ class _LangizaPdfState extends State<Langizakoyear> {
       itemBuilder: (BuildContext context, int index) {
         final year = _filesByYear.keys.toList()[index];
         final yearFiles = _filesByYear[year]!;
+        final numberOfFiles = yearFiles.length;
+
         return ExpansionTile(
-          title: Text(year.toString()),
+          title: Row(
+            children: [
+              Text(year.toString()),
+              SizedBox(width: 8),
+              Text('($numberOfFiles files)'),
+            ],
+          ),
           children: yearFiles.map((file) {
             return FutureBuilder(
               future: file.getMetadata(),
